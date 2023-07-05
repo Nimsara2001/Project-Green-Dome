@@ -1,14 +1,16 @@
 import { useCallback, useState } from 'react';
 import Head from 'next/head';
-import PencilSquareIcon from "@heroicons/react/24/solid/PencilSquareIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
+import { SettingsPassword } from 'src/sections/settings/settings-password';
+import EditPlantBox from 'src/components/edit-plant';
 
 
 
 const Page = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+ 
 
   return (
     <>
@@ -29,18 +31,10 @@ const Page = () => {
                 <Typography variant="h4">Plant 01</Typography>
               </Stack>
               <div>
-                <Button
-                  startIcon={
-                    <SvgIcon fontSize="small">
-                      <PencilSquareIcon/>
-                    </SvgIcon>
-                  }
-                  variant="contained"
-                >
-                  Edit
-                </Button>
+                <EditPlantBox />
               </div>
             </Stack>
+            <SettingsPassword />
           </Stack>
         </Container>
       </Box>

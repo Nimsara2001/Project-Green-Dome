@@ -43,7 +43,7 @@ export const OverviewTraffic = (props) => {
                 <ListItemText
                   primary={product.name}
                   primaryTypographyProps={{ variant: "subtitle1" }}
-                  secondary={`Updated ${ago} ago`}
+                  secondary={`${ago} ago`}
                   secondaryTypographyProps={{ variant: "body2" }}
                 />
                 <IconButton edge="end">
