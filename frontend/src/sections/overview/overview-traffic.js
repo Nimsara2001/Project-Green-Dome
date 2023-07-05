@@ -1,143 +1,66 @@
 import PropTypes from 'prop-types';
-import ComputerDesktopIcon from '@heroicons/react/24/solid/ComputerDesktopIcon';
-import DeviceTabletIcon from '@heroicons/react/24/solid/DeviceTabletIcon';
-import PhoneIcon from '@heroicons/react/24/solid/PhoneIcon';
+import { formatDistanceToNow } from "date-fns";
+import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
+
 import {
-  Box,
   Card,
-  CardContent,
   CardHeader,
-  Stack,
+  Divider,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
   SvgIcon,
-  Typography,
-  useTheme
-} from '@mui/material';
-import { Chart } from 'src/components/chart';
+} from "@mui/material";
+import { Scrollbar } from 'src/components/scrollbar';
 
-const useChartOptions = (labels) => {
-  const theme = useTheme();
-
-  return {
-    chart: {
-      background: 'transparent'
-    },
-    colors: [
-      theme.palette.primary.main,
-      theme.palette.success.main,
-      theme.palette.warning.main
-    ],
-    dataLabels: {
-      enabled: false
-    },
-    labels,
-    legend: {
-      show: false
-    },
-    plotOptions: {
-      pie: {
-        expandOnClick: false
-      }
-    },
-    states: {
-      active: {
-        filter: {
-          type: 'none'
-        }
-      },
-      hover: {
-        filter: {
-          type: 'none'
-        }
-      }
-    },
-    stroke: {
-      width: 0
-    },
-    theme: {
-      mode: theme.palette.mode
-    },
-    tooltip: {
-      fillSeriesColor: false
-    }
-  };
-};
-
-const iconMap = {
-  Desktop: (
-    <SvgIcon>
-      <ComputerDesktopIcon />
-    </SvgIcon>
-  ),
-  Tablet: (
-    <SvgIcon>
-      <DeviceTabletIcon />
-    </SvgIcon>
-  ),
-  Phone: (
-    <SvgIcon>
-      <PhoneIcon />
-    </SvgIcon>
-  )
-};
 
 export const OverviewTraffic = (props) => {
-  const { chartSeries, labels, sx } = props;
-  const chartOptions = useChartOptions(labels);
+  const { products = [], sx } = props;
+
 
   return (
     <Card sx={sx}>
-      <CardHeader title="Traffic Source" />
-      <CardContent>
-        <Chart
-          height={300}
-          options={chartOptions}
-          series={chartSeries}
-          type="donut"
-          width="100%"
-        />
-        <Stack
-          alignItems="center"
-          direction="row"
-          justifyContent="center"
-          spacing={2}
-          sx={{ mt: 2 }}
-        >
-          {chartSeries.map((item, index) => {
-            const label = labels[index];
+      <CardHeader title="Notifications" />
+      <Scrollbar
+        sx={{
+          height: "80%",
+          "& .simplebar-content": {
+            height: "100%",
+          },
+          "& .simplebar-scrollbar:before": {
+            background: "neutral.400",
+          },
+        }}
+      >
+        <List>
+          {products.map((product, index) => {
+            const hasDivider = index < products.length - 1;
+            const ago = formatDistanceToNow(product.updatedAt);
 
             return (
-              <Box
-                key={label}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center'
-                }}
-              >
-                {iconMap[label]}
-                <Typography
-                  sx={{ my: 1 }}
-                  variant="h6"
-                >
-                  {label}
-                </Typography>
-                <Typography
-                  color="text.secondary"
-                  variant="subtitle2"
-                >
-                  {item}%
-                </Typography>
-              </Box>
+              <ListItem divider={hasDivider} key={product.id}>
+                <ListItemText
+                  primary={product.name}
+                  primaryTypographyProps={{ variant: "subtitle1" }}
+                  secondary={`Updated ${ago} ago`}
+                  secondaryTypographyProps={{ variant: "body2" }}
+                />
+                <IconButton edge="end">
+                <SvgIcon>
+                  <XCircleIcon/>
+                </SvgIcon>
+              </IconButton>
+              </ListItem>
             );
           })}
-        </Stack>
-      </CardContent>
+        </List>
+      </Scrollbar>
     </Card>
   );
 };
 
 OverviewTraffic.propTypes = {
-  chartSeries: PropTypes.array.isRequired,
-  labels: PropTypes.array.isRequired,
-  sx: PropTypes.object
+  products: PropTypes.array,
+  sx: PropTypes.object,
 };
